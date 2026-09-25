@@ -1,0 +1,18 @@
+Use the attached Task Board project as the visual design reference.
+
+Preserve its visual language:
+- Compact, professional operational UI
+- Space Grotesk for interface text
+- JetBrains Mono for metadata and labels
+- Blue-violet brand color with soft gray canvas
+- Semantic CSS color tokens with light and dark modes
+- Rounded cards and controls
+- Thin borders, subtle shadows, and restrained gradients
+- Compact spacing and dense data layouts
+- Pill-shaped status chips
+- Responsive mobile-first behavior
+- Lucide icons and shadcn/ui component patterns
+
+Reuse the existing design tokens and component styling from styles.css.
+Do not copy the business logic, routes, database models, or task-specific wording.
+Adapt the same visual system to the new project’s domain.
