@@ -25,17 +25,13 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import logoLight from "@/assets/task-board-logo-light.png.asset.json";
 import logoDark from "@/assets/task-board-logo-dark.png.asset.json";
 
-
-
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Task Board" },
       {
         name: "description",
-        content:
-          "Clean, compact project task board with search, filters and live status updates.",
+        content: "Clean, compact project task board with search, filters and live status updates.",
       },
       { property: "og:title", content: "Task Board" },
       {
@@ -48,7 +44,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-
 
 const FILTER_KEY = "lsea-filters-v1";
 
@@ -70,8 +65,7 @@ function Index() {
     return projects.filter((p) => ids.has(p.id));
   }, [viewer, projects, members, allTasks]);
 
-  const activeProject =
-    myProjects.find((p) => p.id === projectId) ?? myProjects[0] ?? null;
+  const activeProject = myProjects.find((p) => p.id === projectId) ?? myProjects[0] ?? null;
 
   const tasks = useMemo(
     () => (activeProject ? allTasks.filter((t) => t.projectId === activeProject.id) : []),
@@ -80,7 +74,9 @@ function Index() {
 
   const people = useMemo(() => {
     if (!activeProject) return allPeople;
-    const ids = new Set(members.filter((m) => m.projectId === activeProject.id).map((m) => m.personId));
+    const ids = new Set(
+      members.filter((m) => m.projectId === activeProject.id).map((m) => m.personId),
+    );
     const list = allPeople.filter((p) => ids.has(p.id));
     return list.length ? list : allPeople;
   }, [allPeople, members, activeProject]);
@@ -100,7 +96,9 @@ function Index() {
       const result = await persistTaskImport(rows, activeProject?.id ?? null);
       setTaskExcelMessage(`Imported ${result.created} new, updated ${result.updated} tasks.`);
     } catch (error) {
-      setTaskExcelMessage(error instanceof Error ? error.message : "Could not import the workbook.");
+      setTaskExcelMessage(
+        error instanceof Error ? error.message : "Could not import the workbook.",
+      );
     } finally {
       setTaskExcelBusy(false);
       if (taskExcelInput.current) taskExcelInput.current.value = "";
@@ -119,7 +117,6 @@ function Index() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
 
   useEffect(() => {
     try {
@@ -145,8 +142,13 @@ function Index() {
     return tasks.filter((t) => {
       if (filters.statuses.length && !filters.statuses.includes(t.status)) return false;
       if (filters.modules.length && !filters.modules.includes(t.module)) return false;
-      if (filters.assignees.length && !filters.assignees.includes(t.assigneeId ?? "none")) return false;
-      if (q && !(`${t.code} ${t.title} ${t.detail} ${t.module} ${t.assignee}`.toLowerCase().includes(q))) return false;
+      if (filters.assignees.length && !filters.assignees.includes(t.assigneeId ?? "none"))
+        return false;
+      if (
+        q &&
+        !`${t.code} ${t.title} ${t.detail} ${t.module} ${t.assignee}`.toLowerCase().includes(q)
+      )
+        return false;
       return true;
     });
   }, [tasks, filters]);
@@ -166,7 +168,9 @@ function Index() {
   const toggleAssignee = (id: string) =>
     setFilters((f) => ({
       ...f,
-      assignees: f.assignees.includes(id) ? f.assignees.filter((x) => x !== id) : [...f.assignees, id],
+      assignees: f.assignees.includes(id)
+        ? f.assignees.filter((x) => x !== id)
+        : [...f.assignees, id],
     }));
 
   const setStatus = (id: string, status: Status) =>
@@ -205,10 +209,6 @@ function Index() {
     setAdding(false);
   };
 
-
-
-
-
   return (
     <div className="min-h-screen bg-canvas font-display text-ink antialiased">
       <header className="sticky top-0 z-30 border-b border-border bg-card/85 backdrop-blur-md">
@@ -216,23 +216,11 @@ function Index() {
           <div className="flex flex-col items-start">
             {mounted ? (
               <>
-                <img
-                  src={logoLight.url}
-                  alt="Task Board"
-                  className="h-6 w-auto dark:hidden"
-                />
-                <img
-                  src={logoDark.url}
-                  alt="Task Board"
-                  className="hidden h-6 w-auto dark:block"
-                />
+                <img src={logoLight.url} alt="Task Board" className="h-6 w-auto dark:hidden" />
+                <img src={logoDark.url} alt="Task Board" className="hidden h-6 w-auto dark:block" />
               </>
             ) : (
-              <img
-                src={logoLight.url}
-                alt="Task Board"
-                className="h-6 w-auto"
-              />
+              <img src={logoLight.url} alt="Task Board" className="h-6 w-auto" />
             )}
             <div className="font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
               Project tracker
@@ -285,9 +273,7 @@ function Index() {
                 );
               })}
             </SelectContent>
-
           </Select>
-
 
           <div className="ml-2 hidden items-center gap-1.5 md:flex">
             {STATUS_ORDER.map((s) => (
@@ -326,7 +312,9 @@ function Index() {
         <div className="flex items-start gap-5">
           <aside className="sticky top-[4.5rem] hidden w-52 shrink-0 space-y-4 rounded-xl border border-border bg-card/70 p-3.5 backdrop-blur-sm lg:block">
             <div>
-              <div className="mb-1.5 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Status</div>
+              <div className="mb-1.5 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                Status
+              </div>
               <div className="space-y-1 text-[12px]">
                 {STATUS_ORDER.map((s) => (
                   <label
@@ -347,7 +335,9 @@ function Index() {
             </div>
 
             <div className="border-t border-border pt-3">
-              <div className="mb-1.5 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Module</div>
+              <div className="mb-1.5 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                Module
+              </div>
               <div className="flex flex-wrap gap-1.5">
                 {MODULES.map((m) => {
                   const on = filters.modules.includes(m);
@@ -365,7 +355,9 @@ function Index() {
             </div>
 
             <div className="border-t border-border pt-3">
-              <div className="mb-1.5 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Assignee</div>
+              <div className="mb-1.5 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                Assignee
+              </div>
               <div className="focus-within:ring-brand/40 mb-2 flex h-8 items-center gap-2 rounded-lg border border-border bg-muted px-2 transition-shadow focus-within:ring-2">
                 <span className="font-mono text-[12px] text-ink/45">⌕</span>
                 <input
@@ -416,7 +408,6 @@ function Index() {
               </Link>
             </div>
 
-
             <div className="border-t border-border pt-3">
               <button
                 onClick={() => setFilters(DEFAULT_FILTERS)}
@@ -445,10 +436,40 @@ function Index() {
                 >
                   <span>↓</span> Export MD
                 </button>
-                <button type="button" disabled={taskExcelBusy} onClick={() => void downloadTaskWorkbook(tasks, activeProject, true)} className="h-9 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-ink/60 hover:bg-accent disabled:opacity-50">Template</button>
-                <button type="button" disabled={taskExcelBusy} onClick={() => void downloadTaskWorkbook(tasks, activeProject)} className="h-9 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-ink/60 hover:bg-accent disabled:opacity-50">Export XLSX</button>
-                <input ref={taskExcelInput} type="file" accept=".xlsx" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) void handleTaskExcelImport(file); }} />
-                <button type="button" disabled={taskExcelBusy} onClick={() => taskExcelInput.current?.click()} className="from-brand-light to-brand h-9 rounded-lg bg-gradient-to-b px-2.5 text-[11px] font-medium text-white disabled:opacity-50">{taskExcelBusy ? "Importing…" : "Import XLSX"}</button>
+                <button
+                  type="button"
+                  disabled={taskExcelBusy}
+                  onClick={() => void downloadTaskWorkbook(tasks, activeProject, true)}
+                  className="h-9 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-ink/60 hover:bg-accent disabled:opacity-50"
+                >
+                  Template
+                </button>
+                <button
+                  type="button"
+                  disabled={taskExcelBusy}
+                  onClick={() => void downloadTaskWorkbook(tasks, activeProject)}
+                  className="h-9 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-ink/60 hover:bg-accent disabled:opacity-50"
+                >
+                  Export XLSX
+                </button>
+                <input
+                  ref={taskExcelInput}
+                  type="file"
+                  accept=".xlsx"
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) void handleTaskExcelImport(file);
+                  }}
+                />
+                <button
+                  type="button"
+                  disabled={taskExcelBusy}
+                  onClick={() => taskExcelInput.current?.click()}
+                  className="from-brand-light to-brand h-9 rounded-lg bg-gradient-to-b px-2.5 text-[11px] font-medium text-white disabled:opacity-50"
+                >
+                  {taskExcelBusy ? "Importing…" : "Import XLSX"}
+                </button>
                 <button
                   onClick={() => setAdding((v) => !v)}
                   className="from-brand-light to-brand ring-brand/30 relative h-9 overflow-hidden rounded-lg bg-gradient-to-b pr-2.5 pl-3 text-[12px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_3px_10px_rgba(36,86,230,.35)] ring-1 transition-shadow hover:shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_5px_16px_rgba(36,86,230,.45)]"
@@ -461,7 +482,9 @@ function Index() {
               </div>
             </div>
 
-            {taskExcelMessage && <p className="mb-3 text-right text-[11px] text-ink/55">{taskExcelMessage}</p>}
+            {taskExcelMessage && (
+              <p className="mb-3 text-right text-[11px] text-ink/55">{taskExcelMessage}</p>
+            )}
 
             {adding && (
               <div className="mb-3 rounded-xl border border-border bg-card/85 p-3">
@@ -491,7 +514,9 @@ function Index() {
                   </select>
                   <select
                     value={draft.priority}
-                    onChange={(e) => setDraft((d) => ({ ...d, priority: e.target.value as Priority }))}
+                    onChange={(e) =>
+                      setDraft((d) => ({ ...d, priority: e.target.value as Priority }))
+                    }
                     className="h-7 rounded-md border border-border bg-background px-2 text-[11px] font-medium"
                   >
                     <option>P1</option>
@@ -569,19 +594,27 @@ function Index() {
                         </div>
                       </div>
 
-                      <span className={`chip hidden md:inline-flex ${MODULE_CHIP[t.module]}`}>{t.module}</span>
+                      <span className={`chip hidden md:inline-flex ${MODULE_CHIP[t.module]}`}>
+                        {t.module}
+                      </span>
                       <span className={`chip ${STATUS_META[t.status].chip}`}>
                         <span className={`size-1.5 rounded-full ${STATUS_META[t.status].dot}`} />
                         {STATUS_META[t.status].label}
                       </span>
-                      <span className={`pri hidden md:inline ${PRIORITY_CLASS[t.priority]}`}>{t.priority}</span>
-                      <span className="hidden text-right font-mono text-[10px] text-ink/40 md:inline">{t.updated}</span>
+                      <span className={`pri hidden md:inline ${PRIORITY_CLASS[t.priority]}`}>
+                        {t.priority}
+                      </span>
+                      <span className="hidden text-right font-mono text-[10px] text-ink/40 md:inline">
+                        {t.updated}
+                      </span>
                     </div>
 
                     {isOpen && (
                       <div className="px-3 pt-0.5 pb-3 md:px-4">
                         <div className="rounded-lg border border-border bg-muted/80 p-3">
-                          <p className="max-w-[70ch] text-[12px] leading-relaxed text-ink/70">{t.detail}</p>
+                          <p className="max-w-[70ch] text-[12px] leading-relaxed text-ink/70">
+                            {t.detail}
+                          </p>
                           <div className="mt-3 flex flex-wrap items-center gap-2">
                             <span className="text-[11px] text-ink/50">Status:</span>
                             <select
@@ -608,7 +641,6 @@ function Index() {
                                 </option>
                               ))}
                             </select>
-
                           </div>
                         </div>
                       </div>
@@ -630,7 +662,9 @@ function Index() {
               </span>
               <span>
                 Filters ·{" "}
-                {filters.statuses.length ? filters.statuses.map((s) => STATUS_META[s].label).join(", ") : "All statuses"}{" "}
+                {filters.statuses.length
+                  ? filters.statuses.map((s) => STATUS_META[s].label).join(", ")
+                  : "All statuses"}{" "}
                 · {filters.modules.length ? filters.modules.join(", ") : "All modules"}
               </span>
             </div>

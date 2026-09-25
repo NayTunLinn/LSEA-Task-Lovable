@@ -42,7 +42,6 @@ function TaskDetail() {
   const task = useMemo(() => tasks.find((t) => t.id === taskId), [tasks, taskId]);
   const assignedPerson = people.find((p) => p.id === task?.assigneeId);
 
-
   const [newItem, setNewItem] = useState("");
 
   if (!hydrated) {
@@ -55,7 +54,10 @@ function TaskDetail() {
         <div className="text-center">
           <p className="font-mono text-[11px] tracking-[0.18em] text-ink/40 uppercase">404</p>
           <h1 className="mt-2 text-[19px] font-semibold tracking-tight">Task not found</h1>
-          <Link to="/" className="text-brand mt-3 inline-block text-[12px] font-medium hover:underline">
+          <Link
+            to="/"
+            className="text-brand mt-3 inline-block text-[12px] font-medium hover:underline"
+          >
             ← Back to board
           </Link>
         </div>
@@ -66,12 +68,16 @@ function TaskDetail() {
   const checklist: ChecklistItem[] = task.checklist ?? [];
   const doneCount = checklist.filter((c) => c.done).length;
 
-  const setChecklist = (next: ChecklistItem[], log?: string) => updateTask(task.id, { checklist: next }, log);
+  const setChecklist = (next: ChecklistItem[], log?: string) =>
+    updateTask(task.id, { checklist: next }, log);
 
   const addItem = () => {
     const text = newItem.trim();
     if (!text) return;
-    setChecklist([...checklist, { id: `c${Date.now()}`, text, done: false }], `Added checklist item “${text}”`);
+    setChecklist(
+      [...checklist, { id: `c${Date.now()}`, text, done: false }],
+      `Added checklist item “${text}”`,
+    );
     setNewItem("");
   };
 
@@ -79,7 +85,10 @@ function TaskDetail() {
     <div className="bg-canvas font-display text-ink min-h-screen antialiased">
       <header className="sticky top-0 z-30 border-b border-border bg-card/85 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-[1100px] items-center gap-3 px-5">
-          <Link to="/" className="text-ink/55 hover:text-ink flex items-center gap-1.5 text-[12px] font-medium">
+          <Link
+            to="/"
+            className="text-ink/55 hover:text-ink flex items-center gap-1.5 text-[12px] font-medium"
+          >
             <span className="text-sm leading-none">←</span> Board
           </Link>
           <span className="text-ink/20">/</span>
@@ -109,7 +118,9 @@ function TaskDetail() {
             </div>
 
             <section className="rounded-xl border border-border bg-card/80 p-4">
-              <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Description</div>
+              <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                Description
+              </div>
               <textarea
                 value={task.detail}
                 onChange={(e) => updateTask(task.id, { detail: e.target.value })}
@@ -120,7 +131,9 @@ function TaskDetail() {
 
             <section className="rounded-xl border border-border bg-card/80 p-4">
               <div className="mb-2 flex items-center justify-between">
-                <div className="font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Acceptance checklist</div>
+                <div className="font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                  Acceptance checklist
+                </div>
                 <span className="font-mono text-[10px] text-ink/40">
                   {doneCount}/{checklist.length}
                 </span>
@@ -130,14 +143,19 @@ function TaskDetail() {
                 <div className="mb-3 h-1 w-full overflow-hidden rounded-full bg-muted">
                   <div
                     className="from-brand-light to-brand h-full rounded-full bg-gradient-to-r transition-[width]"
-                    style={{ width: `${checklist.length ? (doneCount / checklist.length) * 100 : 0}%` }}
+                    style={{
+                      width: `${checklist.length ? (doneCount / checklist.length) * 100 : 0}%`,
+                    }}
                   />
                 </div>
               )}
 
               <div className="space-y-1">
                 {checklist.map((c) => (
-                  <div key={c.id} className="group flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-muted">
+                  <div
+                    key={c.id}
+                    className="group flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-muted"
+                  >
                     <input
                       type="checkbox"
                       checked={c.done}
@@ -149,9 +167,18 @@ function TaskDetail() {
                       }
                       className="accent-brand size-3.5"
                     />
-                    <span className={`flex-1 text-[12.5px] ${c.done ? "text-ink/40 line-through" : ""}`}>{c.text}</span>
+                    <span
+                      className={`flex-1 text-[12.5px] ${c.done ? "text-ink/40 line-through" : ""}`}
+                    >
+                      {c.text}
+                    </span>
                     <button
-                      onClick={() => setChecklist(checklist.filter((x) => x.id !== c.id), `Removed “${c.text}”`)}
+                      onClick={() =>
+                        setChecklist(
+                          checklist.filter((x) => x.id !== c.id),
+                          `Removed “${c.text}”`,
+                        )
+                      }
                       className="text-ink/30 hover:text-rose-600 opacity-0 transition group-hover:opacity-100"
                       aria-label="Remove item"
                     >
@@ -160,7 +187,9 @@ function TaskDetail() {
                   </div>
                 ))}
                 {checklist.length === 0 && (
-                  <p className="px-1.5 py-1 font-mono text-[11px] text-ink/40">No checklist items yet.</p>
+                  <p className="px-1.5 py-1 font-mono text-[11px] text-ink/40">
+                    No checklist items yet.
+                  </p>
                 )}
               </div>
 
@@ -170,7 +199,7 @@ function TaskDetail() {
                   onChange={(e) => setNewItem(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addItem()}
                   placeholder="Add acceptance criterion…"
-                   className="focus:ring-brand/25 h-8 flex-1 rounded-lg border border-border bg-muted px-2.5 text-[12px] outline-none focus:ring-2"
+                  className="focus:ring-brand/25 h-8 flex-1 rounded-lg border border-border bg-muted px-2.5 text-[12px] outline-none focus:ring-2"
                 />
                 <button
                   onClick={addItem}
@@ -182,24 +211,30 @@ function TaskDetail() {
             </section>
 
             <section className="rounded-xl border border-border bg-card/80 p-4">
-              <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Notes</div>
+              <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                Notes
+              </div>
               <textarea
                 value={task.notes ?? ""}
                 onChange={(e) => updateTask(task.id, { notes: e.target.value })}
                 rows={3}
                 placeholder="Implementation notes, dependencies, open questions…"
-                 className="focus:ring-brand/25 w-full resize-y rounded-lg border border-border bg-muted px-3 py-2 text-[12.5px] leading-relaxed outline-none focus:ring-2"
+                className="focus:ring-brand/25 w-full resize-y rounded-lg border border-border bg-muted px-3 py-2 text-[12.5px] leading-relaxed outline-none focus:ring-2"
               />
             </section>
 
             <section className="rounded-xl border border-border bg-card/80 p-4">
-              <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">Activity</div>
+              <div className="mb-2 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+                Activity
+              </div>
               <ol className="space-y-2">
                 {(task.activity ?? []).map((a) => (
                   <li key={a.id} className="flex gap-2.5 text-[12px]">
                     <span className="bg-brand/50 mt-1.5 size-1.5 shrink-0 rounded-full" />
                     <span className="flex-1 text-ink/70">{a.text}</span>
-                    <span className="font-mono text-[10px] whitespace-nowrap text-ink/35">{formatWhen(a.at)}</span>
+                    <span className="font-mono text-[10px] whitespace-nowrap text-ink/35">
+                      {formatWhen(a.at)}
+                    </span>
                   </li>
                 ))}
                 {(task.activity ?? []).length === 0 && (
@@ -233,7 +268,13 @@ function TaskDetail() {
             <Field label="Module">
               <select
                 value={task.module}
-                onChange={(e) => updateTask(task.id, { module: e.target.value as Module }, `Module → ${e.target.value}`)}
+                onChange={(e) =>
+                  updateTask(
+                    task.id,
+                    { module: e.target.value as Module },
+                    `Module → ${e.target.value}`,
+                  )
+                }
                 className="h-8 w-full rounded-md border border-border bg-background px-2 text-[12px] font-medium"
               >
                 {MODULES.map((m) => (
@@ -246,7 +287,11 @@ function TaskDetail() {
               <select
                 value={task.priority}
                 onChange={(e) =>
-                  updateTask(task.id, { priority: e.target.value as Priority }, `Priority → ${e.target.value}`)
+                  updateTask(
+                    task.id,
+                    { priority: e.target.value as Priority },
+                    `Priority → ${e.target.value}`,
+                  )
                 }
                 className="h-8 w-full rounded-md border border-border bg-background px-2 text-[12px] font-medium"
               >
@@ -280,7 +325,8 @@ function TaskDetail() {
               {assignedPerson && (
                 <p className="mt-1 font-mono text-[10px] text-ink/40">
                   {roles.find((r) => r.id === assignedPerson.roleId)?.name ?? "No role"} ·{" "}
-                  {departments.find((d) => d.id === assignedPerson.departmentId)?.name ?? "No department"}
+                  {departments.find((d) => d.id === assignedPerson.departmentId)?.name ??
+                    "No department"}
                 </p>
               )}
             </Field>
@@ -303,7 +349,6 @@ function TaskDetail() {
                 ))}
               </select>
             </Field>
-
           </aside>
         </div>
       </div>
@@ -314,7 +359,9 @@ function TaskDetail() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-1 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">{label}</div>
+      <div className="mb-1 font-mono text-[9px] tracking-[0.18em] text-ink/40 uppercase">
+        {label}
+      </div>
       {children}
     </div>
   );

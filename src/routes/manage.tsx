@@ -16,7 +16,12 @@ import {
   useDirectory,
   type Person,
 } from "@/lib/directory-store";
-import { downloadDirectoryWorkbook, persistDirectoryImport, readDirectoryWorkbook, type DirectoryImport } from "@/lib/directory-excel";
+import {
+  downloadDirectoryWorkbook,
+  persistDirectoryImport,
+  readDirectoryWorkbook,
+  type DirectoryImport,
+} from "@/lib/directory-excel";
 
 export const Route = createFileRoute("/manage")({
   head: () => ({
@@ -62,7 +67,9 @@ function Manage() {
       const data: DirectoryImport = await readDirectoryWorkbook(file);
       const result = await persistDirectoryImport(data);
       await dir.refresh();
-      setExcelMessage(`Imported ${result.people} people, ${result.projects} projects, ${result.modules} modules.`);
+      setExcelMessage(
+        `Imported ${result.people} people, ${result.projects} projects, ${result.modules} modules.`,
+      );
     } catch (error) {
       setExcelMessage(error instanceof Error ? error.message : "Could not import the workbook.");
     } finally {
@@ -98,7 +105,10 @@ function Manage() {
     <div className="bg-canvas font-display text-ink min-h-screen antialiased">
       <header className="sticky top-0 z-30 border-b border-border bg-card/85 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-[1100px] items-center gap-3 px-5">
-          <Link to="/" className="text-ink/55 hover:text-ink flex items-center gap-1.5 text-[12px] font-medium">
+          <Link
+            to="/"
+            className="text-ink/55 hover:text-ink flex items-center gap-1.5 text-[12px] font-medium"
+          >
             <span className="text-sm leading-none">←</span> Board
           </Link>
           <span className="text-ink/20">/</span>
@@ -113,13 +123,45 @@ function Manage() {
         <div className="mb-4 flex flex-col gap-3 rounded-xl border border-border bg-card/80 p-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[13px] font-semibold">Excel directory tools</p>
-            <p className="font-mono text-[10px] text-ink/45">Template / တင်သွင်းရန် · Export / ဒေါင်းလုဒ်</p>
+            <p className="font-mono text-[10px] text-ink/45">
+              Template / တင်သွင်းရန် · Export / ဒေါင်းလုဒ်
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button type="button" disabled={excelBusy} onClick={() => void downloadDirectoryWorkbook(dir, true)} className="min-h-11 rounded-lg border border-border bg-background px-3 text-[11px] font-medium text-ink/70 hover:bg-accent disabled:opacity-50">Download template</button>
-            <button type="button" disabled={excelBusy} onClick={() => void downloadDirectoryWorkbook(dir)} className="min-h-11 rounded-lg border border-border bg-background px-3 text-[11px] font-medium text-ink/70 hover:bg-accent disabled:opacity-50">Export Excel</button>
-            <input ref={excelInput} type="file" accept=".xlsx" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) void handleExcelImport(file); }} />
-            <button type="button" disabled={excelBusy} onClick={() => excelInput.current?.click()} className="from-brand-light to-brand min-h-11 rounded-lg bg-gradient-to-b px-3 text-[11px] font-medium text-white disabled:opacity-50">{excelBusy ? "Importing…" : "Upload Excel"}</button>
+            <button
+              type="button"
+              disabled={excelBusy}
+              onClick={() => void downloadDirectoryWorkbook(dir, true)}
+              className="min-h-11 rounded-lg border border-border bg-background px-3 text-[11px] font-medium text-ink/70 hover:bg-accent disabled:opacity-50"
+            >
+              Download template
+            </button>
+            <button
+              type="button"
+              disabled={excelBusy}
+              onClick={() => void downloadDirectoryWorkbook(dir)}
+              className="min-h-11 rounded-lg border border-border bg-background px-3 text-[11px] font-medium text-ink/70 hover:bg-accent disabled:opacity-50"
+            >
+              Export Excel
+            </button>
+            <input
+              ref={excelInput}
+              type="file"
+              accept=".xlsx"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) void handleExcelImport(file);
+              }}
+            />
+            <button
+              type="button"
+              disabled={excelBusy}
+              onClick={() => excelInput.current?.click()}
+              className="from-brand-light to-brand min-h-11 rounded-lg bg-gradient-to-b px-3 text-[11px] font-medium text-white disabled:opacity-50"
+            >
+              {excelBusy ? "Importing…" : "Upload Excel"}
+            </button>
           </div>
           {excelMessage && <p className="text-[11px] text-ink/60 sm:ml-auto">{excelMessage}</p>}
         </div>
@@ -143,8 +185,16 @@ function Manage() {
         {tab === "people" && (
           <Panel title="People" hint="Everyone who can be assigned a task.">
             <div className="mb-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_8rem_9rem_auto]">
-              <Input value={person.name} onChange={(v) => setPerson({ ...person, name: v })} placeholder="Full name" />
-              <Input value={person.email} onChange={(v) => setPerson({ ...person, email: v })} placeholder="Email" />
+              <Input
+                value={person.name}
+                onChange={(v) => setPerson({ ...person, name: v })}
+                placeholder="Full name"
+              />
+              <Input
+                value={person.email}
+                onChange={(v) => setPerson({ ...person, email: v })}
+                placeholder="Email"
+              />
               <Select value={person.roleId} onChange={(v) => setPerson({ ...person, roleId: v })}>
                 <option value="">Role…</option>
                 {dir.roles.map((r) => (
@@ -153,7 +203,10 @@ function Manage() {
                   </option>
                 ))}
               </Select>
-              <Select value={person.departmentId} onChange={(v) => setPerson({ ...person, departmentId: v })}>
+              <Select
+                value={person.departmentId}
+                onChange={(v) => setPerson({ ...person, departmentId: v })}
+              >
                 <option value="">Department…</option>
                 {dir.departments.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -185,8 +238,16 @@ function Manage() {
                 >
                   {editPersonId === p.id ? (
                     <>
-                      <Input value={editPerson.name} onChange={(v) => setEditPerson({ ...editPerson, name: v })} placeholder="Full name" />
-                      <Input value={editPerson.email} onChange={(v) => setEditPerson({ ...editPerson, email: v })} placeholder="Email" />
+                      <Input
+                        value={editPerson.name}
+                        onChange={(v) => setEditPerson({ ...editPerson, name: v })}
+                        placeholder="Full name"
+                      />
+                      <Input
+                        value={editPerson.email}
+                        onChange={(v) => setEditPerson({ ...editPerson, email: v })}
+                        placeholder="Email"
+                      />
                       <div className="col-span-2 flex items-center gap-1.5">
                         <Save
                           onClick={() => {
@@ -205,8 +266,13 @@ function Manage() {
                   ) : (
                     <>
                       <span className="truncate text-[12.5px] font-medium">{p.name}</span>
-                      <span className="truncate font-mono text-[11px] text-ink/45">{p.email || "—"}</span>
-                      <Select value={p.roleId ?? ""} onChange={(v) => void updatePerson(p.id, { roleId: v || null })}>
+                      <span className="truncate font-mono text-[11px] text-ink/45">
+                        {p.email || "—"}
+                      </span>
+                      <Select
+                        value={p.roleId ?? ""}
+                        onChange={(v) => void updatePerson(p.id, { roleId: v || null })}
+                      >
                         <option value="">No role</option>
                         {dir.roles.map((r) => (
                           <option key={r.id} value={r.id}>
@@ -246,7 +312,11 @@ function Manage() {
         {(tab === "roles" || tab === "departments") && (
           <Panel
             title={tab === "roles" ? "Roles" : "Departments"}
-            hint={tab === "roles" ? "What a person does on the project." : "Which team a person belongs to."}
+            hint={
+              tab === "roles"
+                ? "What a person does on the project."
+                : "Which team a person belongs to."
+            }
           >
             <div className="mb-3 flex gap-2">
               <Input
@@ -274,7 +344,11 @@ function Manage() {
                   {editSimpleId === r.id ? (
                     <>
                       <div className="flex-1">
-                        <Input value={editSimpleName} onChange={setEditSimpleName} placeholder="Name" />
+                        <Input
+                          value={editSimpleName}
+                          onChange={setEditSimpleName}
+                          placeholder="Name"
+                        />
                       </div>
                       <Save
                         onClick={() => {
@@ -300,7 +374,9 @@ function Manage() {
                   )}
                 </div>
               ))}
-              {(tab === "roles" ? dir.roles : dir.departments).length === 0 && <Empty>Nothing here yet.</Empty>}
+              {(tab === "roles" ? dir.roles : dir.departments).length === 0 && (
+                <Empty>Nothing here yet.</Empty>
+              )}
             </div>
           </Panel>
         )}
@@ -308,8 +384,16 @@ function Manage() {
         {tab === "projects" && (
           <Panel title="Projects" hint="Group tasks under a project.">
             <div className="mb-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_7rem_minmax(0,1fr)_auto]">
-              <Input value={project.name} onChange={(v) => setProject({ ...project, name: v })} placeholder="Project name" />
-              <Input value={project.code} onChange={(v) => setProject({ ...project, code: v })} placeholder="Code" />
+              <Input
+                value={project.name}
+                onChange={(v) => setProject({ ...project, name: v })}
+                placeholder="Project name"
+              />
+              <Input
+                value={project.code}
+                onChange={(v) => setProject({ ...project, code: v })}
+                placeholder="Code"
+              />
               <Input
                 value={project.description}
                 onChange={(v) => setProject({ ...project, description: v })}
@@ -318,7 +402,11 @@ function Manage() {
               <Primary
                 onClick={() => {
                   if (!project.name.trim() || !project.code.trim()) return;
-                  void addProject(project.name.trim(), project.code.trim().toUpperCase(), project.description.trim());
+                  void addProject(
+                    project.name.trim(),
+                    project.code.trim().toUpperCase(),
+                    project.description.trim(),
+                  );
                   setProject({ name: "", code: "", description: "" });
                 }}
               >
@@ -367,11 +455,17 @@ function Manage() {
                     <>
                       <span className="text-brand/70 font-mono text-[10px]">{p.code}</span>
                       <span className="text-[12.5px] font-medium">{p.name}</span>
-                      <span className="flex-1 truncate text-[11px] text-ink/45">{p.description}</span>
+                      <span className="flex-1 truncate text-[11px] text-ink/45">
+                        {p.description}
+                      </span>
                       <Edit
                         onClick={() => {
                           setEditProjectId(p.id);
-                          setEditProject({ name: p.name, code: p.code, description: p.description });
+                          setEditProject({
+                            name: p.name,
+                            code: p.code,
+                            description: p.description,
+                          });
                         }}
                       />
                       <Remove onClick={() => void removeRow("projects", p.id)} />
@@ -387,7 +481,11 @@ function Manage() {
         {tab === "modules" && (
           <Panel title="Modules" hint="Areas of the product a task belongs to.">
             <div className="mb-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-              <Input value={mod.name} onChange={(v) => setMod({ ...mod, name: v })} placeholder="Module name" />
+              <Input
+                value={mod.name}
+                onChange={(v) => setMod({ ...mod, name: v })}
+                placeholder="Module name"
+              />
               <Select value={mod.projectId} onChange={(v) => setMod({ ...mod, projectId: v })}>
                 <option value="">No project</option>
                 {dir.projects.map((p) => (
@@ -470,7 +568,15 @@ function Manage() {
   );
 }
 
-function Panel({ title, hint, children }: { title: string; hint: string; children: React.ReactNode }) {
+function Panel({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint: string;
+  children: React.ReactNode;
+}) {
   return (
     <section className="rounded-xl border border-border bg-card/80 p-4">
       <div className="mb-3">

@@ -40,12 +40,18 @@ export const STATUS_META: Record<Status, { label: string; chip: string; dot: str
 export const STATUS_ORDER: Status[] = ["done", "progress", "review", "backlog"];
 
 export const MODULE_CHIP: Record<Module, string> = {
-  Admin: "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800",
-  License: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800",
-  Review: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800",
-  System: "bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-950/60 dark:text-pink-300 dark:border-pink-800",
-  Upload: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
-  Quota: "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800",
+  Admin:
+    "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800",
+  License:
+    "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800",
+  Review:
+    "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800",
+  System:
+    "bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-950/60 dark:text-pink-300 dark:border-pink-800",
+  Upload:
+    "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
+  Quota:
+    "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800",
 };
 
 export const MODULES: Module[] = ["Admin", "License", "Review", "System", "Upload", "Quota"];
@@ -73,7 +79,8 @@ export const SEED_TASKS: Task[] = [
     id: "t2",
     code: "LSEA-102",
     title: "Show local & foreign bank fields in License Form",
-    detail: "Remove the local/foreign toggle and render both bank field sets inline in the License Form.",
+    detail:
+      "Remove the local/foreign toggle and render both bank field sets inline in the License Form.",
     module: "License",
     status: "progress",
     priority: "P1",
@@ -108,7 +115,8 @@ export const SEED_TASKS: Task[] = [
     id: "t5",
     code: "LSEA-105",
     title: "Align button + Member Start Date (Admin approve stage)",
-    detail: "Adjust the UI alignment of the action button and the Member Start Date field in the admin approve stage.",
+    detail:
+      "Adjust the UI alignment of the action button and the Member Start Date field in the admin approve stage.",
     module: "Admin",
     status: "backlog",
     priority: "P3",
@@ -119,7 +127,8 @@ export const SEED_TASKS: Task[] = [
     id: "t6",
     code: "LSEA-106",
     title: "Notification panel: scrollbar, search & read-all",
-    detail: "Add a scrollbar, a search function and a mark-all-as-read action to the notification panel.",
+    detail:
+      "Add a scrollbar, a search function and a mark-all-as-read action to the notification panel.",
     module: "System",
     status: "progress",
     priority: "P1",
@@ -130,7 +139,8 @@ export const SEED_TASKS: Task[] = [
     id: "t7",
     code: "LSEA-107",
     title: "Show notification center in menu",
-    detail: "Surface the notification center in the main menu. It is already included in the Admin view.",
+    detail:
+      "Surface the notification center in the main menu. It is already included in the Admin view.",
     module: "System",
     status: "backlog",
     priority: "P2",
@@ -152,7 +162,8 @@ export const SEED_TASKS: Task[] = [
     id: "t9",
     code: "LSEA-109",
     title: "Adjust SignalR to refresh user active pages",
-    detail: "Tune the SignalR connection so a user's currently active pages refresh when related data changes.",
+    detail:
+      "Tune the SignalR connection so a user's currently active pages refresh when related data changes.",
     module: "System",
     status: "progress",
     priority: "P1",
@@ -163,7 +174,8 @@ export const SEED_TASKS: Task[] = [
     id: "t10",
     code: "LSEA-110",
     title: "Audit Trail: remove User column, add User Name + Email",
-    detail: "Update the Audit Trail table: drop the User column and add User Name and Email columns.",
+    detail:
+      "Update the Audit Trail table: drop the User column and add User Name and Email columns.",
     module: "Admin",
     status: "done",
     priority: "P3",
@@ -174,7 +186,8 @@ export const SEED_TASKS: Task[] = [
     id: "t11",
     code: "LSEA-111",
     title: "Application Review: filter side panel",
-    detail: "Add a filter side panel to Application Review. Default filter excludes active members' applications.",
+    detail:
+      "Add a filter side panel to Application Review. Default filter excludes active members' applications.",
     module: "Review",
     status: "progress",
     priority: "P2",
@@ -197,7 +210,8 @@ export const SEED_TASKS: Task[] = [
     id: "t13",
     code: "LSEA-113",
     title: "Persist filters in cookies / session",
-    detail: "Filtering state must be saved in cookies or session so it survives navigation and reload.",
+    detail:
+      "Filtering state must be saved in cookies or session so it survives navigation and reload.",
     module: "System",
     status: "progress",
     priority: "P1",

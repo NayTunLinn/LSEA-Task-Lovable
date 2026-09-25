@@ -32,7 +32,6 @@ type Row = {
   assignee_id: string | null;
 };
 
-
 let state: TaskDetailed[] = [];
 let started = false;
 let ready = false;
@@ -59,7 +58,6 @@ function fromRow(r: Row): TaskDetailed {
     sortOrder: r.sort_order,
     projectId: r.project_id,
     assigneeId: r.assignee_id,
-
   };
 }
 
@@ -68,7 +66,10 @@ function sortTasks(list: TaskDetailed[]) {
 }
 
 async function fetchAll() {
-  const { data, error } = await supabase.from("tasks").select("*").order("sort_order", { ascending: true });
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .order("sort_order", { ascending: true });
   if (!error && data) state = (data as unknown as Row[]).map(fromRow);
   ready = true;
   emit();
@@ -107,7 +108,10 @@ export async function updateTask(id: string, patch: Partial<TaskDetailed>, log?:
   if (!current) return;
 
   const activity = log
-    ? [{ id: `a${Date.now()}`, at: new Date().toISOString(), text: log }, ...(current.activity ?? [])].slice(0, 40)
+    ? [
+        { id: `a${Date.now()}`, at: new Date().toISOString(), text: log },
+        ...(current.activity ?? []),
+      ].slice(0, 40)
     : (current.activity ?? []);
 
   const merged: TaskDetailed = { ...current, ...patch, updated: "now", activity };
@@ -131,7 +135,6 @@ export async function updateTask(id: string, patch: Partial<TaskDetailed>, log?:
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
-
 }
 
 export async function addTask(task: Omit<TaskDetailed, "sortOrder">) {
@@ -156,7 +159,6 @@ export async function addTask(task: Omit<TaskDetailed, "sortOrder">) {
     sort_order: sortOrder,
     project_id: next.projectId ?? null,
     assignee_id: next.assigneeId ?? null,
-
   });
 }
 
@@ -185,10 +187,18 @@ export function useTasks() {
 
 export function formatWhen(iso: string) {
   const d = new Date(iso);
-  return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
-export function exportTasksMarkdown(tasks: TaskDetailed[], project?: { code: string; name: string } | null) {
+export function exportTasksMarkdown(
+  tasks: TaskDetailed[],
+  project?: { code: string; name: string } | null,
+) {
   const date = new Date().toISOString().slice(0, 10);
   const label = project ? `${project.code} · ${project.name}` : "Task Board";
   const lines = [

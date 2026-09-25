@@ -94,11 +94,31 @@ function start() {
   supabase
     .channel("directory-realtime")
     .on("postgres_changes", { event: "*", schema: "public", table: "roles" }, () => void fetchAll())
-    .on("postgres_changes", { event: "*", schema: "public", table: "departments" }, () => void fetchAll())
-    .on("postgres_changes", { event: "*", schema: "public", table: "projects" }, () => void fetchAll())
-    .on("postgres_changes", { event: "*", schema: "public", table: "modules" }, () => void fetchAll())
-    .on("postgres_changes", { event: "*", schema: "public", table: "people" }, () => void fetchAll())
-    .on("postgres_changes", { event: "*", schema: "public", table: "project_members" }, () => void fetchAll())
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "departments" },
+      () => void fetchAll(),
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "projects" },
+      () => void fetchAll(),
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "modules" },
+      () => void fetchAll(),
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "people" },
+      () => void fetchAll(),
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "project_members" },
+      () => void fetchAll(),
+    )
     .subscribe();
 }
 
@@ -115,10 +135,17 @@ export async function addProject(name: string, code: string, description = "") {
   await fetchAll();
 }
 export async function addModule(name: string, projectId: string | null) {
-  await supabase.from("modules").insert({ name, project_id: projectId, sort_order: state.modules.length + 1 });
+  await supabase
+    .from("modules")
+    .insert({ name, project_id: projectId, sort_order: state.modules.length + 1 });
   await fetchAll();
 }
-export async function addPerson(p: { name: string; email: string; roleId: string | null; departmentId: string | null }) {
+export async function addPerson(p: {
+  name: string;
+  email: string;
+  roleId: string | null;
+  departmentId: string | null;
+}) {
   await supabase
     .from("people")
     .insert({ name: p.name, email: p.email, role_id: p.roleId, department_id: p.departmentId });
@@ -152,7 +179,10 @@ export async function updateProject(
   await supabase.from("projects").update(patch).eq("id", id);
   await fetchAll();
 }
-export async function updateModule(id: string, patch: { name?: string; projectId?: string | null }) {
+export async function updateModule(
+  id: string,
+  patch: { name?: string; projectId?: string | null },
+) {
   await supabase
     .from("modules")
     .update({
@@ -162,7 +192,10 @@ export async function updateModule(id: string, patch: { name?: string; projectId
     .eq("id", id);
   await fetchAll();
 }
-export async function removeRow(table: "roles" | "departments" | "projects" | "modules" | "people", id: string) {
+export async function removeRow(
+  table: "roles" | "departments" | "projects" | "modules" | "people",
+  id: string,
+) {
   await supabase.from(table).delete().eq("id", id);
   await fetchAll();
 }
