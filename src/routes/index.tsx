@@ -8,6 +8,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Download,
+  FileDown,
+  FileSpreadsheet,
+  FileUp,
+  Plus,
+  Type,
+} from "lucide-react";
+import {
   MODULES,
   MODULE_CHIP,
   PRIORITY_CLASS,
@@ -87,6 +102,7 @@ function Index() {
   const taskExcelInput = useRef<HTMLInputElement>(null);
   const [taskExcelBusy, setTaskExcelBusy] = useState(false);
   const [taskExcelMessage, setTaskExcelMessage] = useState("");
+  const [taskError, setTaskError] = useState("");
 
   const handleTaskExcelImport = async (file: File) => {
     setTaskExcelBusy(true);
@@ -429,29 +445,6 @@ function Index() {
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-end gap-2">
-                <button
-                  onClick={() => exportTasksMarkdown(tasks, activeProject)}
-                  className="hidden h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-3 text-[12px] font-medium text-ink/60 hover:bg-accent sm:flex"
-                  title="Export all tasks as Markdown"
-                >
-                  <span>↓</span> Export MD
-                </button>
-                <button
-                  type="button"
-                  disabled={taskExcelBusy}
-                  onClick={() => void downloadTaskWorkbook(tasks, activeProject, true)}
-                  className="h-9 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-ink/60 hover:bg-accent disabled:opacity-50"
-                >
-                  Template
-                </button>
-                <button
-                  type="button"
-                  disabled={taskExcelBusy}
-                  onClick={() => void downloadTaskWorkbook(tasks, activeProject)}
-                  className="h-9 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-ink/60 hover:bg-accent disabled:opacity-50"
-                >
-                  Export XLSX
-                </button>
                 <input
                   ref={taskExcelInput}
                   type="file"
@@ -462,21 +455,90 @@ function Index() {
                     if (file) void handleTaskExcelImport(file);
                   }}
                 />
-                <button
-                  type="button"
-                  disabled={taskExcelBusy}
-                  onClick={() => taskExcelInput.current?.click()}
-                  className="from-brand-light to-brand h-9 rounded-lg bg-gradient-to-b px-2.5 text-[11px] font-medium text-white disabled:opacity-50"
-                >
-                  {taskExcelBusy ? "Importing…" : "Import XLSX"}
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={taskExcelBusy}
+                      className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-3 text-[12px] font-medium text-ink/70 hover:bg-accent disabled:opacity-50"
+                    >
+                      <FileSpreadsheet className="size-4 text-ink/45" />
+                      Workbook
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="min-w-[15rem] rounded-xl border-border bg-popover p-1.5 text-popover-foreground shadow-lg"
+                  >
+                    <div className="px-2 py-1.5">
+                      <p className="font-mono text-[9px] tracking-[0.14em] text-ink/35 uppercase">
+                        Download
+                      </p>
+                    </div>
+                    <DropdownMenuItem
+                      onSelect={() => void downloadTaskWorkbook(tasks, activeProject, true)}
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] focus:bg-accent"
+                    >
+                      <FileDown className="size-4 text-ink/45" />
+                      <div className="flex flex-col">
+                        <span className="font-medium">Blank template</span>
+                        <span className="text-[10px] text-ink/45">
+                          Empty .xlsx with column headers
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => void downloadTaskWorkbook(tasks, activeProject)}
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] focus:bg-accent"
+                    >
+                      <Download className="size-4 text-ink/45" />
+                      <div className="flex flex-col">
+                        <span className="font-medium">Export tasks (.xlsx)</span>
+                        <span className="text-[10px] text-ink/45">
+                          All current tasks with data
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => exportTasksMarkdown(tasks, activeProject)}
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] focus:bg-accent"
+                    >
+                      <Type className="size-4 text-ink/45" />
+                      <div className="flex flex-col">
+                        <span className="font-medium">Export as Markdown</span>
+                        <span className="text-[10px] text-ink/45">Plain-text summary</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-1 bg-border" />
+                    <div className="px-2 py-1.5">
+                      <p className="font-mono text-[9px] tracking-[0.14em] text-ink/35 uppercase">
+                        Upload
+                      </p>
+                    </div>
+                    <DropdownMenuItem
+                      onSelect={() => taskExcelInput.current?.click()}
+                      disabled={taskExcelBusy}
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] focus:bg-accent disabled:opacity-50"
+                    >
+                      <FileUp className="size-4 text-ink/45" />
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {taskExcelBusy ? "Importing…" : "Import .xlsx"}
+                        </span>
+                        <span className="text-[10px] text-ink/45">
+                          Fill the template and upload
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <button
                   onClick={() => setAdding((v) => !v)}
-                  className="from-brand-light to-brand ring-brand/30 relative h-9 overflow-hidden rounded-lg bg-gradient-to-b pr-2.5 pl-3 text-[12px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_3px_10px_rgba(36,86,230,.35)] ring-1 transition-shadow hover:shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_5px_16px_rgba(36,86,230,.45)]"
+                  className="from-brand-light to-brand ring-brand/30 relative flex h-9 items-center gap-1.5 overflow-hidden rounded-lg bg-gradient-to-b pr-3.5 pl-3 text-[12px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_3px_10px_rgba(36,86,230,.35)] ring-1 transition-shadow hover:shadow-[inset_0_1px_0_rgba(255,255,255,.55),0_5px_16px_rgba(36,86,230,.45)]"
                 >
                   <span className="sweep" />
                   <span className="relative flex items-center gap-1.5 font-medium">
-                    <span className="text-sm leading-none">+</span> Add task
+                    <Plus className="size-3.5" /> Add task
                   </span>
                 </button>
               </div>

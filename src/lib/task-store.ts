@@ -70,7 +70,11 @@ async function fetchAll() {
     .from("tasks")
     .select("*")
     .order("sort_order", { ascending: true });
-  if (!error && data) state = (data as unknown as Row[]).map(fromRow);
+  if (error) {
+    console.error("[tasks] fetch failed:", error.message);
+  } else if (data) {
+    state = (data as unknown as Row[]).map(fromRow);
+  }
   ready = true;
   emit();
 }
@@ -117,7 +121,7 @@ export async function updateTask(id: string, patch: Partial<TaskDetailed>, log?:
   const merged: TaskDetailed = { ...current, ...patch, updated: "now", activity };
   applyLocal(state.map((t) => (t.id === id ? merged : t)));
 
-  await supabase
+  const { error } = await supabase
     .from("tasks")
     .update({
       title: merged.title,
@@ -135,6 +139,11 @@ export async function updateTask(id: string, patch: Partial<TaskDetailed>, log?:
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
+  if (error) {
+    console.error("[tasks] update failed:", error.message);
+    void fetchAll();
+    throw new Error(error.message);
+  }
 }
 
 export async function addTask(task: Omit<TaskDetailed, "sortOrder">) {
@@ -143,7 +152,7 @@ export async function addTask(task: Omit<TaskDetailed, "sortOrder">) {
   const next: TaskDetailed = { ...task, sortOrder };
   applyLocal([...state, next]);
 
-  await supabase.from("tasks").insert({
+  const { error } = await supabase.from("tasks").insert({
     id: next.id,
     code: next.code,
     title: next.title,
@@ -160,6 +169,12 @@ export async function addTask(task: Omit<TaskDetailed, "sortOrder">) {
     project_id: next.projectId ?? null,
     assignee_id: next.assigneeId ?? null,
   });
+  if (error) {
+    console.error("[tasks] insert failed:", error.message);
+    state = state.filter((t) => t.id !== next.id);
+    emit();
+    throw new Error(error.message);
+  }
 }
 
 export function useTasks() {

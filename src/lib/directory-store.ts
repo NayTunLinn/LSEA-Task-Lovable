@@ -53,6 +53,15 @@ async function fetchAll() {
     supabase.from("project_members").select("*"),
   ]);
 
+  if (roles.error) console.error("[directory] roles fetch failed:", roles.error.message);
+  if (departments.error)
+    console.error("[directory] departments fetch failed:", departments.error.message);
+  if (projects.error) console.error("[directory] projects fetch failed:", projects.error.message);
+  if (modules.error) console.error("[directory] modules fetch failed:", modules.error.message);
+  if (people.error) console.error("[directory] people fetch failed:", people.error.message);
+  if (members.error)
+    console.error("[directory] project_members fetch failed:", members.error.message);
+
   state = {
     roles: (roles.data ?? []).map((r) => ({ id: r.id, name: r.name })),
     departments: (departments.data ?? []).map((d) => ({ id: d.id, name: d.name })),
